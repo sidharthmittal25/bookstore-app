@@ -36,37 +36,77 @@ function App() {
 function Store({ storeData, included }) {
   const storeImage = storeData.attributes.storeImage;
   const storeName = storeData.attributes.name;
-  const storeRating = storeData.attributes.rating;
+  const [storeRating, setStoreRating] = useState(storeData.attributes.rating);
   const topBooks = included
     .filter(item => item.type === 'books')
     .sort((a, b) => b.attributes.copiesSold - a.attributes.copiesSold)
     .slice(0, 2);
 
+  const starRating = [];
+  for (let i = 1; i <= 5; i++) {
+    const starClass = i <= storeRating ? 'filled' : '';
+    starRating.push(
+      <i
+        key={i}
+        className={`fas fa-star ${starClass}`}
+        style={{ color: starClass ? 'goldenrod' : 'black', marginLeft: '5px' }}
+        onClick={() => handleRatingClick(i)}
+      ></i>
+    );
+  }
+
+  const handleRatingClick = rating => {
+    setStoreRating(rating);
+  };
+
+  const establishmentDate = new Date(storeData.attributes.establishmentDate).toLocaleDateString('en-GB', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric'
+  });
+
+  const website = storeData.attributes.website.replace(/^https?:\/\//, '');
+
   return (
-    <div className="store">
-      <div className="store-info">
-        <img src={storeImage} alt={storeName} />
-        <div>
+    <div className="store-box">
+      <div className="store">
+        <div className="store-info">
+          <img src={storeImage} alt={storeName} />
           <h2>{storeName}</h2>
-          <p>Rating: {storeRating}</p>
+          <div className="rating">{starRating}</div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th colSpan="2">Top Selling Books</th>
+            </tr>
+            <tr>
+              <th>Book Name</th>
+              <th>Author</th>
+            </tr>
+          </thead>
+          <tbody>
+            {topBooks.length > 0 ? (
+              topBooks.map(book => (
+                <tr key={book.id}>
+                  <td className="left-align">{book.attributes.name}</td>
+                  <td className="left-align">{getAuthorName(book.relationships.author.data, included)}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="2">No copies sold</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+        <div className="store-footer">
+          <p className="establishment-date">{`Established: ${establishmentDate}`}</p>
+          <p className="website">
+            <a href={`https://${website}`}>{website}</a>
+          </p>
         </div>
       </div>
-      <table>
-        <thead>
-          <tr>
-            <th>Book Name</th>
-            <th>Author</th>
-          </tr>
-        </thead>
-        <tbody>
-          {topBooks.map(book => (
-            <tr key={book.id}>
-              <td>{book.attributes.name}</td>
-              <td>{getAuthorName(book.relationships.author.data, included)}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
     </div>
   );
 }
