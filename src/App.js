@@ -65,13 +65,53 @@ function Store({ storeData, included }) {
     year: 'numeric'
   });
 
-  const website = storeData.attributes.website.replace(/^https?:\/\//, '');
+  const countryCode = included.find(item => item.type === 'countries' && item.id === storeData.relationships.countries.data.id)?.attributes.code;
+  const [flagUrl, setFlagUrl] = useState(null);
+
+  useEffect(() => {
+    const fetchFlag = async () => {
+      try {
+        const response = await fetch(`https://flagsapi.com/${countryCode}/flat/64.png`);
+        if (response.ok) {
+          const flagData = await response.blob();
+          const flagImageUrl = URL.createObjectURL(flagData);
+          setFlagUrl(flagImageUrl);
+        } else {
+          console.log('Failed to fetch flag');
+        }
+      } catch (error) {
+        console.log('Error fetching flag:', error);
+      }
+    };
+
+    if (countryCode) {
+      fetchFlag();
+    }
+  }, [countryCode]);
 
   return (
     <div className="store-box">
-      <div className="store">
-        <div className="store-info">
-          <img src={storeImage} alt={storeName} />
+      <div className="column">
+        <div className="store">
+          <div className="store-info">
+            <div className="image-container">
+              <img src={storeImage} alt={storeName} />
+            </div>
+          </div>
+          <div className="store-footer">
+            <p className="established-website">
+              {`Established: ${establishmentDate} - `}
+              <a href={storeData.attributes.website}>{storeData.attributes.website}</a>
+            </p>
+            <div className="country-code-container">
+              {flagUrl && <img src={flagUrl} alt={`Flag of ${countryCode}`} />}
+              <p className="country-code">{`Country Code: ${countryCode || 'N/A'}`}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="column">
+        <div className="store-details">
           <h2>{storeName}</h2>
           <div className="rating">{starRating}</div>
         </div>
@@ -100,12 +140,6 @@ function Store({ storeData, included }) {
             )}
           </tbody>
         </table>
-        <div className="store-footer">
-          <p className="establishment-date">{`Established: ${establishmentDate}`}</p>
-          <p className="website">
-            <a href={`https://${website}`}>{website}</a>
-          </p>
-        </div>
       </div>
     </div>
   );
@@ -113,7 +147,7 @@ function Store({ storeData, included }) {
 
 function getAuthorName(authorData, included) {
   const author = included.find(item => item.type === 'authors' && item.id === authorData.id);
-  return author ? author.attributes.fullName : '';
+  return author ? author.attributes.fullName : 'Unknown Author';
 }
 
 export default App;
