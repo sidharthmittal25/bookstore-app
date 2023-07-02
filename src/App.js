@@ -59,11 +59,11 @@ function Store({ storeData, included }) {
     setStoreRating(rating);
   };
 
-  const establishmentDate = new Date(storeData.attributes.establishmentDate).toLocaleDateString('en-GB', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric'
-  });
+    const establishmentDate = new Date(storeData.attributes.establishmentDate).toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    }).replace(/\//g, '.');
 
   const countryCode = included.find(item => item.type === 'countries' && item.id === storeData.relationships.countries.data.id)?.attributes.code;
   const [flagUrl, setFlagUrl] = useState(null);
@@ -89,6 +89,8 @@ function Store({ storeData, included }) {
     }
   }, [countryCode]);
 
+  const websiteLink = storeData.attributes.website.replace(/^https?:\/\//, '');
+
   return (
     <div className="store-box">
       <div className="column">
@@ -101,7 +103,7 @@ function Store({ storeData, included }) {
           <div className="store-footer">
             <p className="established-website">
               {`Established: ${establishmentDate} - `}
-              <a href={storeData.attributes.website}>{storeData.attributes.website}</a>
+              <a href={storeData.attributes.website}>{websiteLink}</a>
             </p>
             <div className="country-code-container">
               {flagUrl && <img src={flagUrl} alt={`Flag of ${countryCode}`} />}
