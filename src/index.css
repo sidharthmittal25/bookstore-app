@@ -11,7 +11,7 @@
   align-items: center;
   gap: 20px;
   border: 5px solid #ddd;
-  padding: 20px;
+  padding: 10px;
   margin-bottom: 20px;
   width: 900px;
 }
@@ -97,7 +97,7 @@ td.left-align {
 
 .store-footer {
   margin-top: 10px;
-  text-align: left;
+  text-align: center;
 }
 
 .established-website {
@@ -107,7 +107,9 @@ td.left-align {
 
 .country-code-container {
   display: flex;
-  align-items: right;
+  justify-content: flex-end;
+  align-items: flex-start;
+  margin-top: 10px;
 }
 
 .country-code-container img {
@@ -143,3 +145,11 @@ td.left-align {
   outline: none;
   box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.4);
 }
+
+.flag-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  margin-top: 10px;
+}
+

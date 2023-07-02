@@ -1,0 +1,17 @@
+node version: 18.16.1
+
+npm version: 9.7.2
+
+How to run the app?
+Running bookstore API:
+1. Clone repo locally (https://github.com/squirro/frontend-coding-challenge)
+2. cd inside book-store-api folder and run npm install
+3. Serve it on the port 3000 by running npm run start
+
+
+Running the bookstore App:
+1. git clone the repo (https://github.com/sidharthmittal25/bookstore-app/tree/master)
+2. cd into the repo
+3. npm install
+4. npm install @fortawesome/fontawesome-free
+5. npm start

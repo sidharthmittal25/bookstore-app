@@ -59,22 +59,22 @@ function Store({ storeData, included }) {
     setStoreRating(rating);
   };
 
-    const establishmentDate = new Date(storeData.attributes.establishmentDate).toLocaleDateString('en-GB', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric'
-    }).replace(/\//g, '.');
+  const establishmentDate = new Date(storeData.attributes.establishmentDate).toLocaleDateString('en-GB', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric'
+  }).replace(/\//g, '.');
 
   const countryCode = included.find(item => item.type === 'countries' && item.id === storeData.relationships.countries.data.id)?.attributes.code;
-  const [flagUrl, setFlagUrl] = useState(null);
+  const [flagUrl, setFlagUrl] = useState('');
 
   useEffect(() => {
     const fetchFlag = async () => {
       try {
-        const response = await fetch(`https://flagsapi.com/${countryCode}/flat/64.png`);
+        const response = await fetch(`https://restcountries.com/v2/alpha/${countryCode}`);
         if (response.ok) {
-          const flagData = await response.blob();
-          const flagImageUrl = URL.createObjectURL(flagData);
+          const data = await response.json();
+          const flagImageUrl = data.flags.png;
           setFlagUrl(flagImageUrl);
         } else {
           console.log('Failed to fetch flag');
@@ -101,16 +101,12 @@ function Store({ storeData, included }) {
             </div>
           </div>
           <div className="store-footer">
-            <p className="established-website">
-              {`Established: ${establishmentDate}  `}
-                  <a href={storeData.attributes.website} target="_blank" rel="noopener noreferrer">
-                    <button className="visit-store-button">Visit Store</button>
-                  </a>
-            </p>
-            <div className="country-code-container">
-              {flagUrl && <img src={flagUrl} alt={`Flag of ${countryCode}`} />}
-              <p className="country-code">{`Country Code: ${countryCode || 'N/A'}`}</p>
-            </div>
+          <a href={storeData.attributes.website} target="_blank" rel="noopener noreferrer">
+            <button className="visit-store-button">Visit Store</button>
+          </a>
+          <p className="established-website">
+            {`Established: ${establishmentDate}  `}
+          </p>
           </div>
         </div>
       </div>
@@ -144,6 +140,11 @@ function Store({ storeData, included }) {
             )}
           </tbody>
         </table>
+        <div>
+        </div>
+        <div className="country-code-container">
+          {flagUrl && <img src={flagUrl} alt={`Flag of ${countryCode}`} />}
+        </div>
       </div>
     </div>
   );
