@@ -51,7 +51,7 @@
 
 .rating {
   color: #ffcc00;
-  font-size: 24px;
+  font-size: 10px;
   margin-bottom: 10px;
 }
 
@@ -98,7 +98,7 @@ td.left-align {
 
 .country-code-container {
   display: flex;
-  align-items: center;
+  align-items: right;
 }
 
 .country-code-container img {
