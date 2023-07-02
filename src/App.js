@@ -102,8 +102,10 @@ function Store({ storeData, included }) {
           </div>
           <div className="store-footer">
             <p className="established-website">
-              {`Established: ${establishmentDate} - `}
-              <a href={storeData.attributes.website}>{websiteLink}</a>
+              {`Established: ${establishmentDate}  `}
+                  <a href={storeData.attributes.website} target="_blank" rel="noopener noreferrer">
+                    <button className="visit-store-button">Visit Store</button>
+                  </a>
             </p>
             <div className="country-code-container">
               {flagUrl && <img src={flagUrl} alt={`Flag of ${countryCode}`} />}
